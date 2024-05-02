@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Do My Home Work | Text to Handwriting | Direct PDF | Multiple Handwritings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/jspdf@^1/dist/jspdf.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap" rel="stylesheet">
+
+</head>
+
+<body class="text-blue-800" style="font-family: 'Caveat', cursive;font-optical-sizing: auto;font-style: normal;">
+    <main class="bg-zinc-700 px-4">
+        <div class="flex flex-col  items-center justify-center py-12">
+            <div class="page relative w-full max-w-2xl aspect-[500/707] bg-white grid grid-cols-12 grid-rows-9">
+                <span class="absolute block h-full bg-red-400 top-0 " style="left:16%;width: 1.2px;"></span>
+                <span class="absolute block w-full left-0 bg-red-400 " style="top:11%;height: 1.2px;"></span>
+                <div class="linesContainer w-full h-full absolute top-0 left-0" style="height:89%;top: 11%;">
+
+                </div>
+                <div class="col-span-12 row-span-1" contenteditable="true">
+
+                </div>
+                <div class="col-span-2 row-span-8">
+
+                </div>
+                <div class="textContainer relative col-span-10 row-span-8 outline-none px-2" contenteditable="true">
+                    asdasdfasdasfont-family: "Caveat", cursive;
+                    font-optical-sizing: auto;
+                    font-weight: ;
+                    font-style: normal;font-family: "Caveat", cursive;
+                    font-optical-sizing: auto;
+                    font-weight: ;
+                    font-style: normal;font-family: "Caveat", cursive;
+                    font-optical-sizing: auto;
+                    font-weight: ;
+                    font-style: normal;font-family: "Caveat", cursive;
+                    font-optical-sizing: auto;
+                    font-weight: ;
+                    font-style: normal;font-family: "Caveat", cursive;
+                    font-optical-sizing: auto;
+                    font-weight: ;
+                    font-style: normal;font-family: "Caveat", cursive;
+                    font-optical-sizing: auto;
+                    font-weight: ;
+                    font-style: normal;
+                </div>
+
+            </div>
+            <button id="download-btn" class="py-3 px-6 rounded-lg bg-black text-white">Download Now</button>
+        </div>
+    </main>
+
+    <script src="./vendors/html2canvas.min.js" crossorigin="anonymous"></script>
+    <script src="./utils/handleLines.js"></script>
+    <script src="./utils/handleText.js"></script>
+    <!-- <script type="module" src="js/app.mjs"></script> -->
+    <script>
+        function downloadReceipt() {
+            const pages = document.querySelectorAll('.page');
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
+            });
+            const promises = [];
+            pages.forEach((page, idx, pages) => {
+                promises.push(
+                    html2canvas(page, {
+                        scrollY: -window.scrollY,
+                        scrollX: 0,
+                        // useCORS: true,
+                        scale: 1.5
+                    }).then((canvas) => {
+                        const contentDataURL = canvas.toDataURL('image/png');
+                        console.log(contentDataURL);
+                        pdf.addImage(contentDataURL, 'PNG', 5, 5, pdf.internal.pageSize.width, pdf.internal.pageSize.height - 5);
+                        if (idx < pages.length - 1) {
+                            pdf.addPage();
+                        }
+                    })
+                )
+
+            })
+            Promise.all(promises).then(() => {
+                pdf.save('pages.pdf');
+            });
+        }
+        const btn = document.getElementById('download-btn');
+        btn.addEventListener('click', () => {
+            downloadReceipt();
+        })
+    </script>
+</body>
+
+</html>
